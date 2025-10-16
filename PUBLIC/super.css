@@ -1,45 +1,85 @@
-/* super.css */
-
+/* ===== Estilos generales ===== */
 body {
-  background-color: white;
-  font-family: 'Poppins', sans-serif;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #fff;
+  color: #000;
 }
 
-/* Caja de bienvenida */
-.container-super {
-  text-align: center;
-  background: #f9f9f9;
-  padding: 40px 60px;
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.container-super h2 {
-  color: #ff4b2b;
-  margin-bottom: 10px;
-}
-
-.container-super p {
-  color: #333;
-  margin-bottom: 20px;
-}
-
-/* Botón de cerrar sesión */
-.container-super a {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #ff4b2b;
+/* ===== Barra superior ===== */
+.navbar {
+  background-color: #e50914;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
   color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  transition: 0.3s;
 }
 
-.container-super a:hover {
-  background-color: #ff1e56;
+.logo {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.logo img {
+  width: 60px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.cart {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.cart img {
+  width: 35px;
+  margin-right: 8px;
+}
+
+/* ===== Contenido principal ===== */
+main {
+  text-align: center;
+  margin-top: 50px;
+}
+
+main h1 {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 50px;
+}
+
+/* ===== Categorías ===== */
+.categorias {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 50px;
+}
+
+.categoria {
+  text-align: center;
+}
+
+.categoria img {
+  width: 150px;
+  height: 150px;
+  border: 3px solid #007bff;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.categoria img:hover {
+  transform: scale(1.1);
+}
+
+.categoria p {
+  margin-top: 10px;
+  font-weight: 500;
+  font-size: 16px;
 }
