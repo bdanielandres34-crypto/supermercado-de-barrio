@@ -1,0 +1,45 @@
+/* super.css */
+
+body {
+  background-color: white;
+  font-family: 'Poppins', sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+/* Caja de bienvenida */
+.container-super {
+  text-align: center;
+  background: #f9f9f9;
+  padding: 40px 60px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.container-super h2 {
+  color: #ff4b2b;
+  margin-bottom: 10px;
+}
+
+.container-super p {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Botón de cerrar sesión */
+.container-super a {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #ff4b2b;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.container-super a:hover {
+  background-color: #ff1e56;
+}
