@@ -7,7 +7,9 @@
   <link rel="stylesheet" href="super.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
+  <!-- NAVBAR -->
   <header class="navbar">
     <!-- Logo -->
     <div class="logo">
@@ -24,78 +26,103 @@
     <div class="mi-cuenta" id="miCuenta">
       <i class="fa-solid fa-user"></i>
       <div>
-        <p>¡Hola! Inicia sesión</p>
-        <strong>Mi cuenta</strong>
+        <p id="saludo">¡Hola! Inicia sesión</p>
+        <strong id="nombreUsuario">Mi cuenta</strong>
       </div>
+      <button id="logoutBtn" style="display:none;" class="btn-salir">Cerrar sesión</button>
     </div>
 
     <!-- Carrito -->
     <div class="carrito" id="carrito">
       <i class="fa-solid fa-cart-shopping"></i>
       <span>Carrito</span>
-      <a href="carrito.html" class="carrito">
-  🛒 <span id="contador-carrito">0</span>
-</a>
+      <a href="carrito.html" class="carrito-link">🛒 <span id="contador-carrito">0</span></a>
     </div>
   </header>
 
+  <!-- CONTENIDO PRINCIPAL -->
+  <main>
+    <h1 style="text-align:center; margin-top:60px;">Bienvenido al Supermercado de Barrio</h1>
+
+    <!-- MENÚ DE CATEGORÍAS -->
+    <div class="menu-categorias" id="menuCategorias">
+      <div class="categorias">
+        <div class="categoria" onclick="window.location.href='lacteos.html'">
+          <img src="super/lacteos.png" alt="Lácteos">
+          <p>LÁCTEOS</p>
+        </div>
+
+        <div class="categoria" onclick="window.location.href='despensa.html'">
+          <img src="super/despensa.png" alt="Despensa">
+          <p>DESPENSA</p>
+        </div>
+
+        <div class="categoria" onclick="window.location.href='aseo_personal.html'">
+          <img src="super/aseop.png" alt="Aseo Personal">
+          <p>ASEO PERSONAL</p>
+        </div>
+
+        <div class="categoria" onclick="window.location.href='aseo.html'">
+          <img src="super/aseo.png" alt="Aseo">
+          <p>ASEO</p>
+        </div>
+
+        <div class="categoria" onclick="window.location.href='carnes_frias.html'">
+          <img src="super/carnes.png" alt="Carnes Frías">
+          <p>CARNES FRÍAS</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ICONO FLOTANTE DEL CARRITO -->
+  <a href="carrito.html" class="carrito-icono">
+    🛒 <span id="contador-carrito">0</span>
+  </a>
+
+  <!-- SCRIPTS -->
   <script>
-    // Redireccionar al login
+    // Mostrar el nombre del usuario actual
+    fetch("/usuario-actual")
+      .then(res => res.json())
+      .then(data => {
+        const saludo = document.getElementById("saludo");
+        const nombre = document.getElementById("nombreUsuario");
+        const logoutBtn = document.getElementById("logoutBtn");
+
+        if (data.usuario) {
+          saludo.textContent = "¡Hola!";
+          nombre.textContent = data.usuario;
+          logoutBtn.style.display = "inline-block";
+        } else {
+          saludo.textContent = "¡Hola! Inicia sesión";
+          nombre.textContent = "Mi cuenta";
+        }
+      });
+
+    // Redirigir al login si no hay usuario
     document.getElementById("miCuenta").addEventListener("click", () => {
-      window.location.href = "index.html";
+      fetch("/usuario-actual")
+        .then(res => res.json())
+        .then(data => {
+          if (!data.usuario) {
+            window.location.href = "index.html";
+          }
+        });
     });
 
-    // Redireccionar al carrito
+    // Cerrar sesión
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      window.location.href = "/logout";
+    });
+
+    // Redirigir al carrito
     document.getElementById("carrito").addEventListener("click", () => {
       window.location.href = "carrito.html";
     });
   </script>
-</body>
-</html>
 
- <main>
-    <h1 style="text-align:center;margin-top:60px;">Bienvenido al Supermercado de Barrio</h1>
-  </main>
-
-  <!-- MENÚ DE CATEGORÍAS -->
-  <div class="menu-categorias" id="menuCategorias">
-   <div class="categorias">
-      <div class="categoria" onclick="window.location.href='lacteos.html'">
-        <img src="super/lacteos.png" alt="Lácteos">
-        <p>LÁCTEOS</p>
-      </div>
-
-      <div class="categoria" onclick="window.location.href='despensa.html'">
-        <img src="super/despensa.png" alt="Despensa">
-        <p>DESPENSA</p>
-      </div>
-
-      <div class="categoria" onclick="window.location.href='aseo_personal.html'">
-        <img src="super/aseop.png" alt="Aseo Personal">
-        <p>ASEO PERSONAL</p>
-      </div>
-
-      <div class="categoria" onclick="window.location.href='aseo.html'">
-        <img src="super/aseo.png" alt="Aseo">
-        <p>ASEO</p>
-      </div>
-
-      <div class="categoria" onclick="window.location.href='carnes_frias.html'">
-        <img src="super/carnes.png" alt="Carnes Frías">
-        <p>CARNES FRÍAS</p>
-      </div>
-    </div>
-  </main>
-</body>
-
-  <script src="super.js"></script>
-
-  <a href="carrito.html" class="carrito-icono">
-  🛒 <span id="contador-carrito">0</span>
-</a>
-
-<script src="carrito.js"></script>
-<script>actualizarContadorCarrito();</script>
-
+  <script src="carrito.js"></script>
+  <script>if (typeof actualizarContadorCarrito === "function") actualizarContadorCarrito();</script>
 </body>
 </html>

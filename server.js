@@ -1,39 +1,96 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const db = require('./db');
-const path = require('path');
+const express = require("express");
+const path = require("path");
+const mysql = require("mysql2");
+const bodyParser = require("body-parser");
+const session = require("express-session"); // 👈 Importar módulo de sesión
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
+const PORT = 3000;
+
+// 🟢 Conexión a la base de datos
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "supermercado"
+});
+
+db.connect(err => {
+  if (err) {
+    console.error("❌ Error al conectar a la base de datos:", err);
+  } else {
+    console.log("✅ Conectado a MySQL");
+  }
+});
+
+// 🟢 Middlewares
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
-// Ruta para login
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  const sql = 'SELECT * FROM users WHERE username = ? AND password = ?';
-  db.query(sql, [username, password], (err, results) => {
-    if (err) return res.status(500).send('Error en el servidor');
-    if (results.length > 0) return res.json({ success: true });
-    res.json({ success: false });
+// 🟢 Configurar sesiones
+app.use(session({
+  secret: "clave_secreta_segura",
+  resave: false,
+  saveUninitialized: true
+}));
+
+// 🟢 Página principal
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// 🟢 Registrar usuarios
+app.post("/register", (req, res) => {
+  const { usuario, correo, contrasena } = req.body;
+  const sql = "INSERT INTO usuarios (usuario, correo, contrasena) VALUES (?, ?, ?)";
+  db.query(sql, [usuario, correo, contrasena], (err) => {
+    if (err) {
+      console.error("❌ Error al registrar usuario:", err);
+      return res.send("<script>alert('El correo ya está registrado.'); window.location.href='/register.html';</script>");
+    }
+    console.log("✅ Usuario registrado correctamente");
+    res.redirect("/index.html");
   });
 });
 
-// Ruta para registro
-app.post('/register', (req, res) => {
-  const { username, password } = req.body;
-  const checkUser = 'SELECT * FROM users WHERE username = ?';
-  const insertUser = 'INSERT INTO users (username, password) VALUES (?, ?)';
+// 🟢 Iniciar sesión
+app.post("/login", (req, res) => {
+  const { correo, contrasena } = req.body;
+  const sql = "SELECT * FROM usuarios WHERE correo = ? AND contrasena = ?";
+  db.query(sql, [correo, contrasena], (err, results) => {
+    if (err) {
+      console.error("❌ Error al iniciar sesión:", err);
+      return res.send("Error interno del servidor");
+    }
 
-  db.query(checkUser, [username], (err, results) => {
-    if (err) return res.status(500).send('Error en el servidor');
-    if (results.length > 0) return res.json({ success: false, message: 'Usuario ya existe' });
-
-    db.query(insertUser, [username, password], (err2) => {
-      if (err2) return res.status(500).send('Error al registrar');
-      res.json({ success: true });
-    });
+    if (results.length > 0) {
+      req.session.usuario = results[0].usuario; // ✅ Guardar nombre en la sesión
+      console.log("✅ Sesión iniciada como:", req.session.usuario);
+      res.redirect("/super.html");
+    } else {
+      res.send("<script>alert('Correo o contraseña incorrectos'); window.location.href='/index.html';</script>");
+    }
   });
 });
 
-app.listen(3000, () => console.log('Servidor corriendo en http://localhost:3000'));
+// 🟢 Obtener usuario actual
+app.get("/usuario-actual", (req, res) => {
+  if (req.session.usuario) {
+    res.json({ usuario: req.session.usuario });
+  } else {
+    res.json({ usuario: null });
+  }
+});
+
+// 🟢 Cerrar sesión
+app.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.redirect("/index.html");
+  });
+});
+
+// 🟢 Iniciar servidor
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor corriendo en: http://localhost:${PORT}`);
+});

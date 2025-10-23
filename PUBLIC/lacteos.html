@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-
   <!-- Barra superior -->
   <header class="navbar">
     <!-- Logo -->
@@ -43,8 +42,6 @@
     <i class="fa-solid fa-arrow-left"></i> <span>Volver</span>
   </div>
 
-  <!-- Contenido principal -->
-  <main>
     <h1>LÁCTEOS</h1>
 
     <div class="productos">
@@ -106,41 +103,5 @@
       </div>
     </div>
   </main>
-
-  <!-- Script para carrito -->
-  <script>
-    // Cargar carrito desde localStorage
-    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-
-    // Agregar producto al carrito
-    function agregarAlCarrito(nombre, precio) {
-      const productoExistente = carrito.find(p => p.nombre === nombre);
-      if (productoExistente) {
-        productoExistente.cantidad++;
-      } else {
-        carrito.push({ nombre, precio, cantidad: 1 });
-      }
-
-      localStorage.setItem("carrito", JSON.stringify(carrito));
-      actualizarContadorCarrito();
-      alert(nombre + " agregado al carrito 🛒");
-    }
-
-    // Actualizar contador carrito
-    function actualizarContadorCarrito() {
-      const contador = document.getElementById("contador-carrito");
-      const totalProductos = carrito.reduce((acc, p) => acc + p.cantidad, 0);
-      contador.textContent = totalProductos;
-    }
-
-    // Inicializar contador
-    actualizarContadorCarrito();
-
-    // Ir al carrito
-    document.getElementById("carrito").addEventListener("click", () => {
-      window.location.href = "carrito.html";
-    });
-  </script>
-
 </body>
 </html>
