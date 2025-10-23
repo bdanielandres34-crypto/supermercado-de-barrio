@@ -18,3 +18,4 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     document.getElementById('errorMsg').style.display = 'block';
   }
 });
+

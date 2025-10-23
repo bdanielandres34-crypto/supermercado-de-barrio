@@ -2,47 +2,329 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Carrito de Compras - Supermercado de Barrio</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito de Compras</title>
+  <link rel="stylesheet" href="carrito.css">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    header img {
+      width: 60px;
+    }
+    .carrito-contenido {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .item-carrito {
+      border-bottom: 1px solid #ccc;
+      padding: 10px 0;
+    }
+    .botones {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+    button {
+      background: #27ae60;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #2ecc71;
+    }
+    #factura {
+      margin-top: 40px;
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+    #factura h2 {
+      text-align: center;
+      color: #333;
+    }
+    #form-pago input {
+      width: 90%;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 5px;
+      border: 1px solid #aaa;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <a href="index.html"><img src="logo.png" alt="Logo" width="120"></a>
-    <h2>Carrito de Compras</h2>
-  </header>
+<header class="navbar">
+  <button id="btnVolverAtras" class="btn-flecha">⬅</button>
 
-  <main>
-    <div id="lista-carrito"></div>
-    <h3 id="total"></h3>
-    <button onclick="vaciarCarrito()">Vaciar carrito</button>
+  <div class="logo">
+    <img src="logo.png" alt="Logo Supermercado">
+  </div>
+
+  <h1>Carrito de Compras 🛒</h1>
+</header>
+
+
+
+
+  <main class="carrito-contenido">
+    <div id="productos-carrito"></div>
+    <h2>Total: $<span id="total">0</span></h2>
+
+    <div class="botones">
+      <button id="vaciarCarrito">Vaciar carrito</button>
+      <button id="finalizarCompra">Finalizar compra</button>
+    </div>
+
+    <div id="factura" style="display:none;">
+<h2>
+  <button id="btnVolverAtras" style="
+    background:none;
+    border:none;
+    font-size:24px;
+    cursor:pointer;
+    margin-right:10px;
+  ">⬅️</button>
+  🧾 Factura de Compra
+</h2>
+      <div id="detalle-factura"></div>
+      <h3>Método de pago:</h3>
+      <div id="metodoPago"></div>
+      <div id="form-pago"></div>
+      <button id="volverInicio">Volver al inicio</button>
+    </div>
   </main>
 
-  <script src="carrito.js"></script>
   <script>
-    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-    const contenedor = document.getElementById("lista-carrito");
-    let total = 0;
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
-    if (carrito.length === 0) {
-      contenedor.innerHTML = "<p>Tu carrito está vacío 🛒</p>";
-    } else {
-      carrito.forEach(p => {
-        contenedor.innerHTML += `
-          <div class="item-carrito">
-            <img src="${p.imagen}" width="70">
-            <p>${p.nombre} (x${p.cantidad}) - $${p.precio * p.cantidad}</p>
-            <button onclick="eliminarDelCarrito('${p.nombre}')">Eliminar</button>
-          </div>
+    function guardarCarrito() {
+      localStorage.setItem("carrito", JSON.stringify(carrito));
+    }
+
+    function mostrarCarrito() {
+      const contenedor = document.getElementById("productos-carrito");
+      const totalElement = document.getElementById("total");
+      contenedor.innerHTML = "";
+      let total = 0;
+
+      carrito.forEach((producto, i) => {
+        const div = document.createElement("div");
+        div.classList.add("item-carrito");
+        div.innerHTML = `
+          <p><strong>${producto.nombre}</strong></p>
+          <p>Cantidad: ${producto.cantidad}</p>
+          <p>Precio: $${producto.precio.toLocaleString()}</p>
+          <p>Subtotal: $${(producto.precio * producto.cantidad).toLocaleString()}</p>
+          <button onclick="eliminarProducto(${i})">Eliminar</button>
         `;
-        total += p.precio * p.cantidad;
+        contenedor.appendChild(div);
+        total += producto.precio * producto.cantidad;
       });
-      document.getElementById("total").textContent = "Total: $" + total.toLocaleString();
+
+      totalElement.textContent = total.toLocaleString();
+    }
+
+    function eliminarProducto(i) {
+      carrito.splice(i, 1);
+      guardarCarrito();
+      mostrarCarrito();
     }
 
     function vaciarCarrito() {
-      localStorage.removeItem("carrito");
-      location.reload();
+      carrito = [];
+      guardarCarrito();
+      mostrarCarrito();
     }
+
+    document.getElementById("vaciarCarrito").addEventListener("click", vaciarCarrito);
+
+    document.getElementById("finalizarCompra").addEventListener("click", () => {
+      if (carrito.length === 0) {
+        alert("El carrito está vacío.");
+        return;
+      }
+
+      const factura = document.getElementById("factura");
+      const detalle = document.getElementById("detalle-factura");
+      const metodoPago = document.getElementById("metodoPago");
+
+      detalle.innerHTML = carrito.map(p => `
+        <p>${p.nombre} x${p.cantidad} - $${(p.precio * p.cantidad).toLocaleString()}</p>
+      `).join("");
+
+      metodoPago.innerHTML = `
+        <label><input type="radio" name="pago" value="Efectivo"> 💵 Efectivo</label><br>
+        <label><input type="radio" name="pago" value="Nequi"> 📱 Nequi</label><br>
+        <label><input type="radio" name="pago" value="Daviplata"> 💰 Daviplata</label><br>
+        <label><input type="radio" name="pago" value="Tarjeta"> 💳 Tarjeta</label>
+      `;
+
+      factura.style.display = "block";
+
+      document.querySelectorAll('input[name="pago"]').forEach(radio => {
+        radio.addEventListener('change', e => mostrarFormularioPago(e.target.value));
+      });
+    });
+
+    function mostrarFormularioPago(metodo) {
+      const form = document.getElementById('form-pago');
+      form.innerHTML = "";
+
+      if (metodo === "Efectivo") {
+        form.innerHTML = `
+          <h4>💵 Pago en efectivo</h4>
+          <p>Paga directamente al recibir tu pedido.</p>
+          <button onclick="generarFactura('${metodo}')">Generar factura</button>
+        `;
+      } else if (metodo === "Tarjeta") {
+        form.innerHTML = `
+          <h4>💳 Pago con tarjeta</h4>
+          <label>Número de tarjeta:</label><br>
+          <input type="text" maxlength="16" placeholder="**** **** **** ****"><br>
+          <label>Nombre en la tarjeta:</label><br>
+          <input type="text" placeholder="Nombre completo"><br>
+          <label>CVV:</label><br>
+          <input type="text" maxlength="3" placeholder="***"><br><br>
+          <button onclick="generarFactura('${metodo}')">Pagar y generar factura</button>
+        `;
+      } else if (metodo === "Nequi") {
+        form.innerHTML = `
+          <h4>📱 Pago con Nequi</h4>
+          <p>Envía el valor total al número <strong>3001234567</strong></p>
+          <label>Número desde el que envías:</label><br>
+          <input type="text" placeholder="Ej: 3009876543"><br><br>
+          <button onclick="generarFactura('${metodo}')">Confirmar y generar factura</button>
+        `;
+      } else if (metodo === "Daviplata") {
+        form.innerHTML = `
+          <h4>💰 Pago con Daviplata</h4>
+          <p>Envía el valor total al número <strong>3101234567</strong></p>
+          <label>Número desde el que envías:</label><br>
+          <input type="text" placeholder="Ej: 3109876543"><br><br>
+          <button onclick="generarFactura('${metodo}')">Confirmar y generar factura</button>
+        `;
+      }
+    }
+
+    // === GENERAR FACTURA EN PANTALLA ===
+  function generarFactura(metodo) {
+  const form = document.getElementById("form-pago");
+  const detalleFactura = document.getElementById("detalle-factura");
+  const metodoPago = document.getElementById("metodoPago");
+
+  // 🔹 Ocultar secciones previas
+  if (detalleFactura) detalleFactura.style.display = "none";
+  if (metodoPago) metodoPago.style.display = "none";
+
+  // 🔹 Generar datos de la factura
+  const total = carrito.reduce((acc, p) => acc + (p.precio * p.cantidad), 0);
+  const numeroFactura = Math.floor(100000 + Math.random() * 900000);
+  const fecha = new Date().toLocaleString();
+
+  // 🔹 Crear la factura completa
+  form.innerHTML = `
+    <div style="margin-top:20px; border:1px solid #ccc; padding:15px; border-radius:10px; background:#fdfdfd;">
+      <h2>🧾 Factura de Compra</h2>
+      <p><strong>Método de pago:</strong> ${metodo}</p>
+      <h3 style="color:green;">✅ Pago confirmado con ${metodo}</h3>
+      <p>📄 <strong>Factura N°</strong> ${numeroFactura}</p>
+      <p><strong>Fecha:</strong> ${fecha}</p>
+      <hr>
+      ${carrito.map(p => `<p>${p.nombre} x${p.cantidad} - $${(p.precio * p.cantidad).toLocaleString()}</p>`).join("")}
+      <hr>
+      <p><strong>Total Pagado:</strong> $${total.toLocaleString()}</p>
+      <p><strong>Método de Pago:</strong> ${metodo}</p>
+      <h4>¡Gracias por tu compra! 🛍️</h4>
+
+      <!-- 🔹 Botón para imprimir o guardar -->
+      <button onclick="imprimirFactura()">🖨️</button>
+
+      <!-- 🔹 Botón para volver al inicio -->
+    <button onclick="window.location.href='super.html'" style="margin-left:10px;">🏠</button>
+    </div>
+  `;
+
+  vaciarCarrito(); // Limpia el carrito después del pago
+}
+
+
+    // === IMPRIMIR / DESCARGAR PDF ===
+    function imprimirFactura() {
+      const contenido = document.getElementById("factura").innerHTML;
+      const ventana = window.open("", "_blank");
+      ventana.document.write(`
+        <html>
+          <head>
+            <title>Factura de Compra</title>
+            <style>
+              body { font-family: Arial; padding: 20px; }
+              h2, h3, h4 { text-align: center; }
+              hr { margin: 10px 0; }
+              p { font-size: 16px; }
+            </style>
+          </head>
+          <body>${contenido}</body>
+        </html>
+      `);
+      ventana.document.close();
+      ventana.print();
+    }
+
+    document.getElementById("volverInicio").addEventListener("click", () => {
+      window.location.href = "super.html";
+    });
+
+// Mostrar carrito al cargar
+mostrarCarrito();
+
+// === FLECHA PARA VOLVER ATRÁS ===
+document.addEventListener("DOMContentLoaded", () => {
+  const btnVolver = document.getElementById("btnVolverAtras");
+  if (btnVolver) {
+    btnVolver.addEventListener("click", () => {
+      const factura = document.getElementById("factura");
+      factura.style.display = "none"; // Oculta la factura
+      document.querySelector(".carrito-contenido").style.display = "block"; // Muestra el carrito
+    });
+  }
+});
+
+// === BOTÓN FLECHA PARA VOLVER ATRÁS ===
+document.getElementById("btnVolverAtras").addEventListener("click", () => {
+  const factura = document.getElementById("factura");
+  if (factura.style.display === "block") {
+    factura.style.display = "none";
+    document.querySelector(".carrito-contenido").style.display = "block";
+  } else {
+    window.location.href = "super.html"; // Si no está viendo factura, vuelve al inicio
+  }
+});
+
+</script>
+
+
+    
   </script>
 </body>
 </html>
