@@ -106,3 +106,41 @@ p {
   height: 55px;
   object-fit: contain;
 }
+
+/* --- Carrito --- */
+.carrito {
+  float: right;
+  text-decoration: none;
+  color: black;
+  font-size: 20px;
+  margin-right: 20px;
+}
+
+#contador-carrito {
+  background: red;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 50%;
+  font-size: 14px;
+}
+
+.item-carrito {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.item-carrito button {
+  background: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+

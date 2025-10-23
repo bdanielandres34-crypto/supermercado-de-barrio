@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Carrito de Compras - Supermercado de Barrio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <a href="index.html"><img src="logo.png" alt="Logo" width="120"></a>
+    <h2>Carrito de Compras</h2>
+  </header>
+
+  <main>
+    <div id="lista-carrito"></div>
+    <h3 id="total"></h3>
+    <button onclick="vaciarCarrito()">Vaciar carrito</button>
+  </main>
+
+  <script src="carrito.js"></script>
+  <script>
+    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    const contenedor = document.getElementById("lista-carrito");
+    let total = 0;
+
+    if (carrito.length === 0) {
+      contenedor.innerHTML = "<p>Tu carrito está vacío 🛒</p>";
+    } else {
+      carrito.forEach(p => {
+        contenedor.innerHTML += `
+          <div class="item-carrito">
+            <img src="${p.imagen}" width="70">
+            <p>${p.nombre} (x${p.cantidad}) - $${p.precio * p.cantidad}</p>
+            <button onclick="eliminarDelCarrito('${p.nombre}')">Eliminar</button>
+          </div>
+        `;
+        total += p.precio * p.cantidad;
+      });
+      document.getElementById("total").textContent = "Total: $" + total.toLocaleString();
+    }
+
+    function vaciarCarrito() {
+      localStorage.removeItem("carrito");
+      location.reload();
+    }
+  </script>
+</body>
+</html>
