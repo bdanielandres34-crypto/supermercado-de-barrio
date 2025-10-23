@@ -3,23 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carnes Frías - Supermercado de Barrio</title>
-  <link rel="stylesheet" href="categorias.css">
+  <title>Lácteos - Supermercado de Barrio</title>
+  <link rel="stylesheet" href="super.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+
   <!-- Barra superior -->
   <header class="navbar">
-    <div class="back" onclick="window.location.href='super.html'">←</div>
-    <div class="logo">
+    <!-- Logo -->
+    <div class="logo" onclick="window.location.href='super.html'">
       <img src="logo.png" alt="Logo Supermercado">
-      <span>SUPER MERCADO DE BARRIO</span>
     </div>
-    <div class="cart">
-      <img src="super/carrito.png" alt="Carrito">
+
+    <!-- Barra de búsqueda -->
+    <div class="busqueda">
+      <input type="text" placeholder="Busca productos lácteos...">
+      <button><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+
+    <!-- Mi cuenta -->
+    <div class="mi-cuenta" id="miCuenta">
+      <i class="fa-solid fa-user"></i>
+      <div>
+        <p>¡Hola! Inicia sesión</p>
+        <strong>Mi cuenta</strong>
+      </div>
+    </div>
+
+    <!-- Carrito -->
+    <div class="carrito" id="carrito">
+      <i class="fa-solid fa-cart-shopping"></i>
       <span>Carrito</span>
     </div>
   </header>
 
+  <!-- Flecha para volver -->
+  <div class="volver" onclick="window.location.href='super.html'">
+    <i class="fa-solid fa-arrow-left"></i> <span>Volver</span>
+  </div>
   <!-- Contenido principal -->
   <main>
     <h1>CARNES FRIAS</h1>

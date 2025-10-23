@@ -8,31 +8,29 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-  <!-- BARRA SUPERIOR -->
   <header class="navbar">
+    <!-- Logo -->
     <div class="logo">
       <img src="logo.png" alt="Logo Supermercado">
     </div>
 
-    <div class="categorias-btn" id="btnCategorias">
-      <i class="fa-solid fa-border-all"></i>
-      <span>Categorías</span>
-    </div>
-
+    <!-- Barra de búsqueda -->
     <div class="busqueda">
-      <input type="text" id="busquedaInput" placeholder="Encuentra lo que necesitas en Supermercado de Barrio">
-      <button id="btnBuscar"><i class="fa-solid fa-magnifying-glass"></i></button>
+      <input type="text" placeholder="Encuentra lo que necesitas en Supermercado de Barrio">
+      <button><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
 
-    <div class="mi-cuenta" id="btnCuenta">
+    <!-- Mi cuenta -->
+    <div class="mi-cuenta" id="miCuenta">
       <i class="fa-solid fa-user"></i>
       <div>
-        <p>¡Hola!</p>
+        <p>¡Hola! Inicia sesión</p>
         <strong>Mi cuenta</strong>
       </div>
     </div>
 
-    <div class="carrito" id="btnCarrito">
+    <!-- Carrito -->
+    <div class="carrito" id="carrito">
       <i class="fa-solid fa-cart-shopping"></i>
       <span>Carrito</span>
       <a href="carrito.html" class="carrito">
@@ -40,6 +38,21 @@
 </a>
     </div>
   </header>
+
+  <script>
+    // Redireccionar al login
+    document.getElementById("miCuenta").addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+
+    // Redireccionar al carrito
+    document.getElementById("carrito").addEventListener("click", () => {
+      window.location.href = "carrito.html";
+    });
+  </script>
+</body>
+</html>
+
  <main>
     <h1 style="text-align:center;margin-top:60px;">Bienvenido al Supermercado de Barrio</h1>
   </main>
