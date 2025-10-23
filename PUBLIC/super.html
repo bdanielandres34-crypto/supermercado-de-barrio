@@ -5,25 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Supermercado de Barrio</title>
   <link rel="stylesheet" href="super.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-  <!-- Barra superior -->
+  <!-- BARRA SUPERIOR -->
   <header class="navbar">
     <div class="logo">
       <img src="logo.png" alt="Logo Supermercado">
-      <span>SUPER MERCADO DE BARRIO</span>
     </div>
-    <div class="cart">
-      <img src="super/carrito.png" alt="Carrito">
+
+    <div class="categorias-btn" id="btnCategorias">
+      <i class="fa-solid fa-border-all"></i>
+      <span>Categorías</span>
+    </div>
+
+    <div class="busqueda">
+      <input type="text" id="busquedaInput" placeholder="Encuentra lo que necesitas en Supermercado de Barrio">
+      <button id="btnBuscar"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+
+    <div class="mi-cuenta" id="btnCuenta">
+      <i class="fa-solid fa-user"></i>
+      <div>
+        <p>¡Hola!</p>
+        <strong>Mi cuenta</strong>
+      </div>
+    </div>
+
+    <div class="carrito" id="btnCarrito">
+      <i class="fa-solid fa-cart-shopping"></i>
       <span>Carrito</span>
     </div>
   </header>
+ <main>
+    <h1 style="text-align:center;margin-top:60px;">Bienvenido al Supermercado de Barrio</h1>
+  </main>
 
-  <!-- Contenido principal -->
-  <main>
-    <h1>¿QUÉ QUIERES COMPRAR HOY?</h1>
-
-    <div class="categorias">
+  <!-- MENÚ DE CATEGORÍAS -->
+  <div class="menu-categorias" id="menuCategorias">
+   <div class="categorias">
       <div class="categoria" onclick="window.location.href='lacteos.html'">
         <img src="super/lacteos.png" alt="Lácteos">
         <p>LÁCTEOS</p>
@@ -50,5 +70,8 @@
       </div>
     </div>
   </main>
+</body>
+
+  <script src="super.js"></script>
 </body>
 </html>
